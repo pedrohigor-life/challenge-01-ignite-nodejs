@@ -15,6 +15,10 @@ class Database {
     fs.writeFile(databasePath, JSON.stringify(this.#database));
   }
 
+  /**
+   * Ao ser instanciada a classse de banco de dados irá ler o arquivo "db.json",
+   * e adicionar os dados dentro da array database
+   */
   constructor() {
     fs.readFile(databasePath, "utf-8")
       .then((data) => {
@@ -26,13 +30,26 @@ class Database {
   }
 
   insert(table, data) {
+    /**
+     * Verifica se o atributo passado para o objeto é uma array, caso seja
+     * o objeto é adicionado dentro da array correspondente
+     */
     if (Array.isArray(this.#database[table])) {
       this.#database[table].push(data);
     } else {
+      /**
+       * Caso o oatributo passado não for uma array, ele adiciona o mesmo dentro de uma array
+       */
       this.#database[table] = [data];
     }
 
     this.#persist();
+  }
+
+  select(table) {
+    let data = this.#database[table] ?? [];
+
+    return data;
   }
 }
 
