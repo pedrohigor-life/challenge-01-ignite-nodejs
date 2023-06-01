@@ -1,12 +1,13 @@
 import { randomUUID } from "node:crypto";
 import { Database } from "./database/index.js";
+import buildRoutes from "./utils/buildRoutes.js";
 
 const database = new Database();
 
 const routes = [
   {
     method: "POST",
-    path: "/tasks",
+    path: buildRoutes.routeParams("/tasks"),
     handle: (req, res) => {
       const { title, description } = req.body;
 
@@ -26,7 +27,7 @@ const routes = [
   },
   {
     method: "GET",
-    path: "/tasks",
+    path: buildRoutes.routeParams("/tasks"),
     handle: (req, res) => {
       const tasks = database.select("tasks");
 

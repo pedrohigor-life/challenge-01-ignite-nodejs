@@ -1,4 +1,5 @@
 import http from "node:http";
+import buildRoutes from "./utils/buildRoutes.js";
 import { json } from "./middlewares/json.js";
 import { routes } from "./routes.js";
 
@@ -14,13 +15,20 @@ const server = http.createServer(async (req, res) => {
    * Retorna a rota correspondente
    */
   const route = routes.find((route) => {
-    return route.method === method && route.path === url;
+    return route.method === method && route.path.test(url);
   });
 
   /**
    * Caso exista uma rota correspondente, o método handle() é acionado
    */
   if (route) {
+    const routeParams = req.url.match(route.path);
+
+    const { query, ...params } = routeParams.groups;
+
+    req.params = params;
+    req.query = query ? buildRoutes.queryParams(query) : {};
+
     return route.handle(req, res);
   }
 
