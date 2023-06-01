@@ -58,6 +58,18 @@ const routes = [
       return res.writeHead(200).end();
     },
   },
+
+  {
+    method: "DELETE",
+    path: routeParams("/tasks/:id"),
+    handle: (req, res) => {
+      const { id } = req.params;
+
+      database.delete("tasks", id);
+
+      return res.writeHead(204).end();
+    },
+  },
 ];
 
 export { routes };

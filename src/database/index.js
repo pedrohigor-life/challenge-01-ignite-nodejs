@@ -78,6 +78,14 @@ class Database {
       this.#persist();
     }
   }
+
+  delete(table, id) {
+    let database = this.#database[table] ?? [];
+
+    const taskIndex = database.findIndex((task) => task.id === id);
+
+    database.splice(taskIndex, 1);
+  }
 }
 
 export { Database };
