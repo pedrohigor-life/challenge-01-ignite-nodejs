@@ -79,12 +79,24 @@ class Database {
     }
   }
 
-  delete(table, id) {
+  patch(table, id) {
     let database = this.#database[table] ?? [];
 
     const taskIndex = database.findIndex((task) => task.id === id);
 
-    database.splice(taskIndex, 1);
+    if (taskIndex > -1) {
+      database[taskIndex].completed_at = new Date();
+      this.#persist();
+    }
+  }
+
+  delete(table, id) {
+    const taskIndex = this.#database[table].findIndex((row) => row.id == id);
+
+    if (taskIndex > -1) {
+      this.#database[table].splice(taskIndex, 1);
+      this.#persist();
+    }
   }
 }
 

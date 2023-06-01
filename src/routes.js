@@ -60,6 +60,18 @@ const routes = [
   },
 
   {
+    method: "PATCH",
+    path: routeParams("/tasks/:id"),
+    handle: (req, res) => {
+      const { id } = req.params;
+
+      database.patch("tasks", id);
+
+      return res.writeHead(200).end();
+    },
+  },
+
+  {
     method: "DELETE",
     path: routeParams("/tasks/:id"),
     handle: (req, res) => {
