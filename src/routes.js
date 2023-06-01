@@ -1,13 +1,13 @@
 import { randomUUID } from "node:crypto";
 import { Database } from "./database/index.js";
-import buildRoutes from "./utils/buildRoutes.js";
+import { routeParams } from "./utils/buildRoutes.js";
 
 const database = new Database();
 
 const routes = [
   {
     method: "POST",
-    path: buildRoutes.routeParams("/tasks"),
+    path: routeParams("/tasks"),
     handle: (req, res) => {
       const { title, description } = req.body;
 
@@ -25,9 +25,10 @@ const routes = [
       return res.writeHead(201).end();
     },
   },
+
   {
     method: "GET",
-    path: buildRoutes.routeParams("/tasks"),
+    path: routeParams("/tasks"),
     handle: (req, res) => {
       const { search } = req.query;
 
@@ -42,6 +43,19 @@ const routes = [
       );
 
       return res.writeHead(200).end(JSON.stringify(tasks));
+    },
+  },
+
+  {
+    method: "PUT",
+    path: routeParams("/tasks/:id"),
+    handle: (req, res) => {
+      const { id } = req.params;
+      const data = req.body;
+
+      database.update("tasks", id, data);
+
+      return res.writeHead(200).end();
     },
   },
 ];

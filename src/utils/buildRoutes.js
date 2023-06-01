@@ -1,27 +1,26 @@
-class BuildRoutes {
-  routeParams(path) {
-    const regexSelect = /:([a-zA-Z]+)/g;
-    const regexInsert = /(?<$1>[a-z0-9-_]+)/;
+function routeParams(path) {
+  const routeParametersRegex = /:([a-zA-Z]+)/g;
+  const pathWithParams = path.replaceAll(
+    routeParametersRegex,
+    "(?<$1>[a-z0-9-_]+)"
+  );
 
-    const reverseRegex = path.replaceAll(regexSelect, regexInsert);
+  const pathRegex = new RegExp(`^${pathWithParams}(?<query>\\?(.*))?$`);
 
-    const routeParams = new RegExp(`^${reverseRegex}(?<query>\\?(.*))?$`);
-
-    return routeParams;
-  }
-
-  queryParams(query) {
-    return query
-      .substr(1)
-      .split("&")
-      .reduce((queryParams, param) => {
-        const [key, value] = param.split("=");
-
-        queryParams[key] = value;
-
-        return queryParams;
-      }, {});
-  }
+  return pathRegex;
 }
 
-export default new BuildRoutes();
+function queryParams(query) {
+  return query
+    .substr(1)
+    .split("&")
+    .reduce((queryParams, param) => {
+      const [key, value] = param.split("=");
+
+      queryParams[key] = value;
+
+      return queryParams;
+    }, {});
+}
+
+export { routeParams, queryParams };

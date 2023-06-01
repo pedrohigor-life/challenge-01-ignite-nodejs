@@ -1,9 +1,10 @@
 import fs from "node:fs/promises";
+import { title } from "node:process";
 
 /**
  * Definindo a localização do arquivo de banco de dados "db.json"
  */
-const databasePath = new URL("../db.json", import.meta.url);
+const databasePath = new URL("../../db.json", import.meta.url);
 
 class Database {
   #database = {};
@@ -47,17 +48,35 @@ class Database {
   }
 
   select(table, search) {
-    let data = this.#database[table] ?? [];
+    let database = this.#database[table] ?? [];
 
     if (search) {
-      data = data.filter((row) => {
+      return database.filter((row) => {
         return Object.entries(search).some(([key, value]) => {
           return row[key].toLowerCase().includes(value.toLowerCase());
         });
       });
     }
 
-    return data;
+    return database;
+  }
+
+  update(table, id, data) {
+    let database = this.#database[table] ?? [];
+
+    const taskIndex = database.findIndex((task) => task.id === id);
+
+    if (taskIndex > -1) {
+      database[taskIndex].title = data.title
+        ? data.title
+        : database[taskIndex].title;
+
+      database[taskIndex].description = data.description
+        ? data.description
+        : database[taskIndex].description;
+
+      this.#persist();
+    }
   }
 }
 

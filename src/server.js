@@ -1,5 +1,5 @@
 import http from "node:http";
-import buildRoutes from "./utils/buildRoutes.js";
+import { queryParams } from "./utils/buildRoutes.js";
 import { json } from "./middlewares/json.js";
 import { routes } from "./routes.js";
 
@@ -27,7 +27,7 @@ const server = http.createServer(async (req, res) => {
     const { query, ...params } = routeParams.groups;
 
     req.params = params;
-    req.query = query ? buildRoutes.queryParams(query) : {};
+    req.query = query ? queryParams(query) : {};
 
     return route.handle(req, res);
   }
